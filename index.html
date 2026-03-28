@@ -435,6 +435,11 @@ td.e-unit{padding:11px 12px 11px 4px;font-size:9px;font-weight:500;color:var(--d
     <div class="greeting-hi" id="greeting-hi"></div>
     <div class="greeting-sub" id="greeting-sub"></div>
   </div>
+  <div id="daily-quote" style="background:var(--blue-lt);border:1px solid var(--blue-bd);border-radius:10px;padding:14px 16px;position:relative;">
+    <div style="font-size:8px;font-weight:700;letter-spacing:.18em;text-transform:uppercase;color:var(--blue-m);margin-bottom:7px;">Today's reminder</div>
+    <div id="quote-text" style="font-family:'Playfair Display',serif;font-size:15px;font-weight:400;color:var(--blue);line-height:1.55;font-style:italic;"></div>
+    <div id="quote-author" style="font-size:10px;font-weight:600;color:var(--blue-m);margin-top:7px;letter-spacing:.06em;"></div>
+  </div>
   <div class="divider"></div>
   <div class="streak">
     <div class="streak-num" id="streak-n"></div>
@@ -867,6 +872,74 @@ function escapeHtml(s){
   return String(s).replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;').replace(/'/g,'&#39;');
 }
 
+/* ── DAILY QUOTES ───────────────────────────────────── */
+const QUOTES=[
+  {q:"The scale measures gravity. Your mirror measures change. Trust the measurements.",a:"FORM"},
+  {q:"You don't have to be extreme, just consistent.",a:""},
+  {q:"Progress is progress, no matter how small. A half inch is still an inch closer.",a:"FORM"},
+  {q:"Your body keeps an honest record of what you do for it.",a:""},
+  {q:"The only bad workout is the one that didn't happen.",a:""},
+  {q:"Strength doesn't come from what you can do. It comes from overcoming the things you thought you couldn't.",a:"Rikki Rogers"},
+  {q:"Every time you log an entry, you're choosing yourself.",a:"FORM"},
+  {q:"It takes four weeks for you to notice your body changing. Eight weeks for friends. Twelve weeks for the rest of the world.",a:""},
+  {q:"The body achieves what the mind believes.",a:""},
+  {q:"You are one workout away from a good mood.",a:""},
+  {q:"Small daily improvements over time lead to stunning results.",a:"Robin Sharma"},
+  {q:"The difference between who you are and who you want to be is what you do.",a:""},
+  {q:"Take care of your body. It's the only place you have to live.",a:"Jim Rohn"},
+  {q:"Consistency is what transforms average into excellence.",a:""},
+  {q:"Your future self is watching you right now through memories.",a:"Aubrey de Grey"},
+  {q:"Don't wish for a good body. Work for it.",a:""},
+  {q:"The pain you feel today will be the strength you feel tomorrow.",a:""},
+  {q:"You don't have to go fast, you just have to go.",a:""},
+  {q:"It never gets easier, you just get stronger.",a:""},
+  {q:"A year from now you'll wish you had started today.",a:"Karen Lamb"},
+  {q:"Strive for progress, not perfection.",a:""},
+  {q:"Believe in yourself and all that you are. Know that there is something inside you that is greater than any obstacle.",a:"Christian D. Larson"},
+  {q:"The first step is you have to say that you can.",a:"Will Smith"},
+  {q:"What seems impossible today will one day become your warm-up.",a:""},
+  {q:"Fall in love with taking care of yourself.",a:""},
+  {q:"Your body is the most priceless possession you have — take care of it.",a:"Jack LaLanne"},
+  {q:"Logging today means your future self has data, not just hope.",a:"FORM"},
+  {q:"You don't have to be perfect. You just have to be consistent.",a:""},
+  {q:"The hard part isn't getting your body in shape. The hard part is getting your mind in shape.",a:""},
+  {q:"Every measurement is a data point. Every data point is proof you showed up.",a:"FORM"},
+  {q:"Transformation is not a future event. It's a present-day activity.",a:""},
+  {q:"Push yourself because no one else is going to do it for you.",a:""},
+  {q:"Success is the sum of small efforts repeated day in and day out.",a:"Robert Collier"},
+  {q:"Your health is an investment, not an expense.",a:""},
+  {q:"The body you have at 40 is the result of the habits you built at 30. The body at 50 is built now.",a:"FORM"},
+  {q:"You are stronger than you think.",a:""},
+  {q:"Discipline is choosing between what you want now and what you want most.",a:"Abraham Lincoln"},
+  {q:"Nothing will work unless you do.",a:"Maya Angelou"},
+  {q:"When you feel like quitting, remember why you started.",a:""},
+  {q:"Your only competition is who you were yesterday.",a:""},
+  {q:"Health is not about the weight you lose but about the life you gain.",a:""},
+  {q:"Every body is a work in progress. The key is that it's progressing.",a:"FORM"},
+  {q:"Be patient with yourself. Nothing in nature blooms all year.",a:""},
+  {q:"The secret of getting ahead is getting started.",a:"Mark Twain"},
+  {q:"You have exactly one body for this one life. That's enough reason.",a:"FORM"},
+  {q:"Fitness is not about being better than someone else. It's about being better than you used to be.",a:""},
+  {q:"Do something today that your future self will thank you for.",a:"Sean Patrick Flanery"},
+  {q:"Strong is not a size. Strong is showing up.",a:"FORM"},
+  {q:"The scale can't measure your strength, your discipline, or how far you've come.",a:"FORM"},
+  {q:"Every expert was once a beginner. Every pro was once an amateur.",a:"Robin Sharma"},
+  {q:"You are allowed to be both a masterpiece and a work in progress.",a:"Sophia Bush"},
+  {q:"Movement is medicine.",a:""},
+  {q:"A little progress each day adds up to big results.",a:""},
+  {q:"Your goals don't care how you feel. Show up anyway.",a:"FORM"},
+];
+
+function renderQuote(){
+  // Pick a different quote each day based on day-of-year
+  const now=new Date();
+  const start=new Date(now.getFullYear(),0,0);
+  const dayOfYear=Math.floor((now-start)/(1000*60*60*24));
+  const q=QUOTES[dayOfYear % QUOTES.length];
+  document.getElementById('quote-text').textContent=`"${q.q}"`;
+  document.getElementById('quote-author').textContent=q.a?`— ${q.a}`:'';
+}
+
 function buildGreeting(){
   const h=new Date().getHours();
   const part=h<12?'morning':h<17?'afternoon':'evening';
@@ -889,6 +962,7 @@ function go(id){
 /* ── DASHBOARD ──────────────────────────────────────── */
 function renderDash(){
   buildGreeting();
+  renderQuote();
   const s=streak();
   document.getElementById('streak-n').textContent=s;
   document.getElementById('streak-sub').textContent=
