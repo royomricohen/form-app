@@ -488,7 +488,7 @@ td.e-unit{padding:11px 12px 11px 4px;font-size:9px;font-weight:500;color:var(--d
   <div><div class="slbl">Metric</div><div class="chips" id="chips"></div></div>
   <div class="card">
     <div class="chart-wrap"><canvas id="chart"></canvas></div>
-    <div id="chart-empty" style="display:none"><div class="empty-state"><div class="empty-icon">📈</div><div class="empty-text">Log entries to see progress</div></div></div>
+    <div id="chart-empty" style="display:none"><div class="empty-state" onclick="go('log')" style="cursor:pointer;padding:28px 16px 20px"><div class="empty-icon">📈</div><div class="empty-text" style="margin-bottom:12px">No entries yet</div><div style="display:inline-block;background:var(--blue);color:#fff;font-size:10px;font-weight:700;letter-spacing:.14em;text-transform:uppercase;padding:10px 24px;border-radius:8px;">Log first entry →</div></div></div>
     <div class="stats-row" id="stats-row" style="display:none">
       <div class="s-cell"><div class="s-key">Change</div><div class="s-val" id="s-chg">—</div></div>
       <div class="s-cell"><div class="s-key">%</div><div class="s-val" id="s-pct">—</div></div>
@@ -900,7 +900,7 @@ function renderDash(){
   // Table
   const L=latest(),P=[...S.entries].sort((a,b)=>b.date.localeCompare(a.date))[1]||null;
   const dtw=document.getElementById('dash-tbl');
-  if(!L){dtw.innerHTML='<div class="empty-state"><div class="empty-icon">📋</div><div class="empty-text">No entries yet — tap Log</div></div>';document.getElementById('hist-sec').style.display='none';return;}
+  if(!L){dtw.innerHTML='<div class="empty-state" onclick="go(\'log\')" style="cursor:pointer;padding:28px 16px 20px"><div class="empty-icon">📋</div><div class="empty-text" style="margin-bottom:12px">No entries yet</div><div style="display:inline-block;background:var(--blue);color:#fff;font-size:10px;font-weight:700;letter-spacing:.14em;text-transform:uppercase;padding:10px 24px;border-radius:8px;">Log first entry →</div></div>';document.getElementById('hist-sec').style.display='none';return;}
   const rows=tracked().map(m=>{
     const v=L[m.key];if(v==null)return'';
     const pv=P?.[m.key];let dh='<span class="nil">—</span>';
